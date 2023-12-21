@@ -5,7 +5,6 @@ import './index.css'
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Converter from "./components/Converter";
 import ExchangeRates from "./components/ExchangeRates";
-import "normalize.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const router = createBrowserRouter([

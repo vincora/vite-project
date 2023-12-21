@@ -2,7 +2,6 @@ import { http, HttpResponse } from "msw";
 
 export const handlers = [
   http.get("https://openexchangerates.org/api/latest.json", () => {
-    console.log("Mocking rates");
     return HttpResponse.json({
       disclaimer: "Usage subject to terms: https://openexchangerates.org/terms",
       license: "https://openexchangerates.org/license",
