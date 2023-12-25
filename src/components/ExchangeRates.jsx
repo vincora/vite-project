@@ -3,7 +3,7 @@ import { RotatingLines } from 'react-loader-spinner';
 import { Button } from './ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
-import { useCustomQuery } from './useCustomQuery';
+import { useCustomQuery } from '../hooks/useCustomQuery';
 
 const ExchangeRates = ({}) => {
     const [baseCurrency, setBaseCurrency] = useState('USD');
