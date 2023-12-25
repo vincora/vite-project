@@ -1,4 +1,4 @@
-export function countQuery(input, ratesQuery) {
+export function calculateAndFormat(input, ratesQuery) {
     let amount = input[0];
     let curr1 = input[1].toUpperCase();
     let curr2 = input[3].toUpperCase();

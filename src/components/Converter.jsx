@@ -3,17 +3,20 @@ import { useState, useEffect, useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { RotatingLines } from 'react-loader-spinner';
 import { z } from 'zod';
+
+import { calculateAndFormat } from '@/lib/calculateAndFormat';
+import { parseConverterInput } from '@/lib/parseConverterInput';
+
+import { useCustomQuery } from '../hooks/useCustomQuery';
 import { cn } from '../lib/utils';
-import { countQuery } from '../lib/countQuery';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
-import { useCustomQuery } from '../hooks/useCustomQuery';
 
 const Converter = () => {
     const [input, setInput] = useState('');
     const [convertedData, setConvertedData] = useState();
-    const {currenciesQuery, ratesQuery} = useCustomQuery();
+    const { currenciesQuery, ratesQuery } = useCustomQuery();
 
     const schema = useMemo(() => {
         if (!currenciesQuery.data) {
@@ -43,17 +46,13 @@ const Converter = () => {
         },
     });
 
-    const parseInput = (input) => {
-        return input.trim().replace(/\s+/g, ' ').split(' ');
-    };
-
     const onSubmit = ({ input }) => {
         setInput(
-            parseInput(input)
+            parseConverterInput(input)
                 .map((item) => item.toLowerCase())
                 .join(' '),
         );
-        setConvertedData(countQuery(parseInput(input), ratesQuery));
+        setConvertedData(calculateAndFormat(parseConverterInput(input), ratesQuery));
     };
 
     useEffect(() => {
