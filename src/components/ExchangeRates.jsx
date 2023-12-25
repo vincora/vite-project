@@ -1,16 +1,13 @@
 import { useState } from 'react';
 import { RotatingLines } from 'react-loader-spinner';
-
 import { Button } from './ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
-import { useCurrencies } from './useCurrencies';
-import { useRates } from './useRates';
+import { useCustomQuery } from './useCustomQuery';
 
 const ExchangeRates = ({}) => {
     const [baseCurrency, setBaseCurrency] = useState('USD');
-    const ratesQuery = useRates();
-    const currenciesQuery = useCurrencies();
+    const {currenciesQuery, ratesQuery} = useCustomQuery();
 
     if (ratesQuery.isLoading) {
         return (
