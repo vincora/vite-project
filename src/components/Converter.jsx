@@ -4,7 +4,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { RotatingLines } from 'react-loader-spinner';
 import { z } from 'zod';
 
-import { calculateAndFormat } from '@/lib/calculateAndFormat';
+import { calculateAndFormat } from '@/lib/calculateConverter';
 import { parseConverterInput } from '@/lib/parseConverterInput';
 
 import { useCustomQuery } from '../hooks/useCustomQuery';
