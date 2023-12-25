@@ -1,13 +1,16 @@
 import { useState } from 'react';
 import { RotatingLines } from 'react-loader-spinner';
+
+import { formatNumber } from '@/lib/formatNumber';
+
+import { useCustomQuery } from '../hooks/useCustomQuery';
 import { Button } from './ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
-import { useCustomQuery } from '../hooks/useCustomQuery';
 
 const ExchangeRates = ({}) => {
     const [baseCurrency, setBaseCurrency] = useState('USD');
-    const {currenciesQuery, ratesQuery} = useCustomQuery();
+    const { currenciesQuery, ratesQuery } = useCustomQuery();
 
     if (ratesQuery.isLoading) {
         return (
@@ -39,17 +42,6 @@ const ExchangeRates = ({}) => {
     if (!ratesQuery.data) {
         return <h3>No data</h3>;
     }
-
-    function formatNumber(num) {
-        if (num >= 1) {
-            return num.toFixed(2);
-        } else {
-            const decimalIndex = Array.from(String(num).substring(2)).findIndex((digit) => digit !== '0');
-            return num.toFixed(decimalIndex + 2);
-        }
-    }
-
-    console.log(currenciesQuery.data);
 
     return (
         <div>

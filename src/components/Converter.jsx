@@ -4,7 +4,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { RotatingLines } from 'react-loader-spinner';
 import { z } from 'zod';
 import { cn } from '../lib/utils';
-import { countQuery } from './countQuery';
+import { countQuery } from '../lib/countQuery';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
@@ -14,7 +14,7 @@ const Converter = () => {
     const [input, setInput] = useState('');
     const [convertedData, setConvertedData] = useState();
     const {currenciesQuery, ratesQuery} = useCustomQuery();
-    
+
     const schema = useMemo(() => {
         if (!currenciesQuery.data) {
             return z.object({
