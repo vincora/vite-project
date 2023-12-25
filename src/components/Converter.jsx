@@ -3,28 +3,25 @@ import { useState, useEffect, useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { RotatingLines } from 'react-loader-spinner';
 import { z } from 'zod';
-
 import { cn } from '../lib/utils';
 import { countQuery } from './countQuery';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
-import { useCurrencies } from './useCurrencies';
-import { useRates } from './useRates';
+import { useCustomQuery } from '../hooks/useCustomQuery';
 
 const Converter = () => {
     const [input, setInput] = useState('');
     const [convertedData, setConvertedData] = useState();
-    const ratesQuery = useRates();
-    const { data } = useCurrencies();
-
+    const {currenciesQuery, ratesQuery} = useCustomQuery();
+    
     const schema = useMemo(() => {
-        if (!data) {
+        if (!currenciesQuery.data) {
             return z.object({
                 input: z.string(),
             });
         }
-        const currencies = Object.keys(data);
+        const currencies = Object.keys(currenciesQuery.data);
         const regexStr = currencies.join('|');
         const regex = new RegExp('^\\s*\\d+\\s+(' + regexStr + ')\\s+in\\s+(' + regexStr + ')\\s*$', 'i');
         return z.object({
@@ -32,7 +29,7 @@ const Converter = () => {
                 message: 'Invalid input',
             }),
         });
-    }, [data]);
+    }, [currenciesQuery.data]);
 
     const {
         handleSubmit,
