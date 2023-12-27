@@ -5,7 +5,7 @@ import { RotatingLines } from 'react-loader-spinner';
 import { z } from 'zod';
 
 import { parseConverterInput } from '@/lib/parseConverterInput';
-import { calculateConverter } from '@/lib/calculateConverter';
+import { calculateConverterInput } from '@/lib/calculateConverterInput';
 
 import { useCustomQuery } from '../hooks/useCustomQuery';
 import { cn } from '../lib/utils';
@@ -53,7 +53,7 @@ const Converter = () => {
         const [amount, fromCurrency, , toCurrency] = parsedInput.split(' ');
         const fromCurrencyRate = ratesQuery.data[fromCurrency.toUpperCase()];
         const toCurrencyRate = ratesQuery.data[toCurrency.toUpperCase()];
-        setConversionResult(`${calculateConverter(fromCurrencyRate, toCurrencyRate, amount)} ${toCurrency}`);
+        setConversionResult(`${calculateConverterInput(fromCurrencyRate, toCurrencyRate, amount)} ${toCurrency}`);
     };
 
     useEffect(() => {
