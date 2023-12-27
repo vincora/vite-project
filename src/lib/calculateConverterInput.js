@@ -1,3 +1,5 @@
+
+
 export const calculateConverterInput = (fromCurrency, toCurrency, amount) => {
-    return (amount * (toCurrency / fromCurrency)).toFixed(2);
+    return (amount * (toCurrency / fromCurrency));
 };

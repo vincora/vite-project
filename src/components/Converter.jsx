@@ -4,8 +4,9 @@ import { Controller, useForm } from 'react-hook-form';
 import { RotatingLines } from 'react-loader-spinner';
 import { z } from 'zod';
 
-import { parseConverterInput } from '@/lib/parseConverterInput';
 import { calculateConverterInput } from '@/lib/calculateConverterInput';
+import { parseConverterInput } from '@/lib/parseConverterInput';
+import { formatNumber } from '@/lib/formatNumber';
 
 import { useCustomQuery } from '../hooks/useCustomQuery';
 import { cn } from '../lib/utils';
@@ -53,7 +54,7 @@ const Converter = () => {
         const [amount, fromCurrency, , toCurrency] = parsedInput.split(' ');
         const fromCurrencyRate = ratesQuery.data[fromCurrency.toUpperCase()];
         const toCurrencyRate = ratesQuery.data[toCurrency.toUpperCase()];
-        setConversionResult(`${calculateConverterInput(fromCurrencyRate, toCurrencyRate, amount)} ${toCurrency}`);
+        setConversionResult(`${formatNumber(calculateConverterInput(fromCurrencyRate, toCurrencyRate, amount))} ${toCurrency}`);
     };
 
     useEffect(() => {
