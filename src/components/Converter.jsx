@@ -4,12 +4,14 @@ import { Controller, useForm } from 'react-hook-form';
 import { RotatingLines } from 'react-loader-spinner';
 import { z } from 'zod';
 
+import { parseConverterInput } from '@/lib/parseConverterInput';
+import { calculateConverter } from '@/lib/calculateConverter';
+
 import { useCustomQuery } from '../hooks/useCustomQuery';
 import { cn } from '../lib/utils';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
-
 
 const Converter = () => {
     const [normalizedInput, setNormalizedInput] = useState('');
@@ -44,23 +46,14 @@ const Converter = () => {
         },
     });
 
-    const parseConverterInput = (input) => {
-        return input.trim().replace(/\s+/g, ' ');
-    };
-
-    const calculateConverter = (normalizedInput) => {
-        const inputData = normalizedInput.split(' ').filter((item) => item !== 'in');
-        const amount = inputData[0];
-        const fromCurrency = inputData[1].toUpperCase();
-        const toCurrency = inputData[2].toUpperCase();
-        return (amount * (ratesQuery.data[toCurrency] / ratesQuery.data[fromCurrency])).toFixed(2);
-    };
-
     const onSubmit = ({ input }) => {
         const parsedInput = parseConverterInput(input);
-        const toCurrency = parsedInput.split(' ').pop();
         setNormalizedInput(parsedInput);
-        setConversionResult(`${calculateConverter(parsedInput)} ${toCurrency}`);
+
+        const [amount, fromCurrency, , toCurrency] = parsedInput.split(' ');
+        const fromCurrencyRate = ratesQuery.data[fromCurrency.toUpperCase()];
+        const toCurrencyRate = ratesQuery.data[toCurrency.toUpperCase()];
+        setConversionResult(`${calculateConverter(fromCurrencyRate, toCurrencyRate, amount)} ${toCurrency}`);
     };
 
     useEffect(() => {
