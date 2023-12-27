@@ -4,18 +4,16 @@ import { Controller, useForm } from 'react-hook-form';
 import { RotatingLines } from 'react-loader-spinner';
 import { z } from 'zod';
 
-import { calculateAndFormat } from '@/lib/calculateConverter';
-import { parseConverterInput } from '@/lib/parseConverterInput';
-
 import { useCustomQuery } from '../hooks/useCustomQuery';
 import { cn } from '../lib/utils';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
 
+
 const Converter = () => {
-    const [input, setInput] = useState('');
-    const [convertedData, setConvertedData] = useState();
+    const [normalizedInput, setNormalizedInput] = useState('');
+    const [conversionResult, setConversionResult] = useState();
     const { currenciesQuery, ratesQuery } = useCustomQuery();
 
     const schema = useMemo(() => {
@@ -46,13 +44,23 @@ const Converter = () => {
         },
     });
 
+    const parseConverterInput = (input) => {
+        return input.trim().replace(/\s+/g, ' ');
+    };
+
+    const calculateConverter = (normalizedInput) => {
+        const inputData = normalizedInput.split(' ').filter((item) => item !== 'in');
+        const amount = inputData[0];
+        const fromCurrency = inputData[1].toUpperCase();
+        const toCurrency = inputData[2].toUpperCase();
+        return (amount * (ratesQuery.data[toCurrency] / ratesQuery.data[fromCurrency])).toFixed(2);
+    };
+
     const onSubmit = ({ input }) => {
-        setInput(
-            parseConverterInput(input)
-                .map((item) => item.toLowerCase())
-                .join(' '),
-        );
-        setConvertedData(calculateAndFormat(parseConverterInput(input), ratesQuery));
+        const parsedInput = parseConverterInput(input);
+        const toCurrency = parsedInput.split(' ').pop();
+        setNormalizedInput(parsedInput);
+        setConversionResult(`${calculateConverter(parsedInput)} ${toCurrency}`);
     };
 
     useEffect(() => {
@@ -119,7 +127,7 @@ const Converter = () => {
             >
                 Calculate
             </Button>
-            {convertedData && <div className='mt-4'>{`${input} = ${convertedData}`}</div>}
+            {conversionResult && <div className='mt-4'>{`${normalizedInput} = ${conversionResult}`}</div>}
         </form>
     );
 };
