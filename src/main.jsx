@@ -29,7 +29,7 @@ const router = createBrowserRouter([
 const queryClient = new QueryClient();
 
 async function enableMocking() {
-    if (process.env.NODE_ENV !== 'development') {
+    if (import.meta.env.PROD) {
         return;
     }
 
