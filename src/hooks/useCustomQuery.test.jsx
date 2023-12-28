@@ -30,7 +30,7 @@ test('fetches mocked data correctly', async () => {
       });
     const wrapper = ({ children }) => <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
     const { result } = renderHook(() => useCustomQuery(), { wrapper });
-    console.log(result.current.ratesQuery.data)
+
     await waitFor(() => expect(result.current.currenciesQuery.data).toEqual(mockCurrencies));
     await waitFor(() => expect(result.current.ratesQuery.data).toEqual(mockRates.rates));
 })
