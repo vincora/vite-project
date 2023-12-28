@@ -1,13 +1,11 @@
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useState, useEffect, useMemo } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { useState } from 'react';
+import { Controller } from 'react-hook-form';
 import { RotatingLines } from 'react-loader-spinner';
-import { z } from 'zod';
 
 import { calculateConverterInput } from '@/lib/calculateConverterInput';
-import { parseConverterInput } from '@/lib/parseConverterInput';
 import { formatNumber } from '@/lib/formatNumber';
-
+import { parseConverterInput } from '@/lib/parseConverterInput';
+import { useConverterForm } from '@/hooks/useConverterForm';
 import { useCustomQuery } from '../hooks/useCustomQuery';
 import { cn } from '../lib/utils';
 import { Button } from './ui/button';
@@ -19,49 +17,24 @@ const Converter = () => {
     const [conversionResult, setConversionResult] = useState();
     const { currenciesQuery, ratesQuery } = useCustomQuery();
 
-    const schema = useMemo(() => {
-        if (!currenciesQuery.data) {
-            return z.object({
-                input: z.string(),
-            });
-        }
-        const currencies = Object.keys(currenciesQuery.data);
-        const regexStr = currencies.join('|');
-        const regex = new RegExp('^\\s*\\d+\\s+(' + regexStr + ')\\s+in\\s+(' + regexStr + ')\\s*$', 'i');
-        return z.object({
-            input: z.string().regex(regex, {
-                message: 'Invalid input',
-            }),
-        });
-    }, [currenciesQuery.data]);
-
     const {
         handleSubmit,
         control,
-        formState: { isSubmitSuccessful, errors },
-        reset,
-    } = useForm({
-        resolver: zodResolver(schema),
-        defaultValues: {
-            input: '',
-        },
-    });
+        formState: { errors },
+    } = useConverterForm(currenciesQuery.data);
 
     const onSubmit = ({ input }) => {
         const parsedInput = parseConverterInput(input);
         setNormalizedInput(parsedInput);
 
         const [amount, fromCurrency, , toCurrency] = parsedInput.split(' ');
-        const fromCurrencyRate = ratesQuery.data[fromCurrency.toUpperCase()];
-        const toCurrencyRate = ratesQuery.data[toCurrency.toUpperCase()];
-        setConversionResult(`${formatNumber(calculateConverterInput(fromCurrencyRate, toCurrencyRate, amount))} ${toCurrency}`);
-    };
+        const fromRate = ratesQuery.data[fromCurrency.toUpperCase()];
+        const toRate = ratesQuery.data[toCurrency.toUpperCase()];
 
-    useEffect(() => {
-        if (isSubmitSuccessful) {
-            reset();
-        }
-    }, [isSubmitSuccessful, reset]);
+        const convertedAmount = calculateConverterInput(fromRate, toRate, amount);
+
+        setConversionResult(`${formatNumber(convertedAmount)} ${toCurrency}`);
+    };
 
     if (ratesQuery.isLoading) {
         return (
