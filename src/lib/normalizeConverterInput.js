@@ -1,3 +1,3 @@
-export const parseConverterInput = (input) => {
+export const normalizeConverterInput = (input) => {
     return input.trim().replace(/\s+/g, ' ').toLowerCase();
 };

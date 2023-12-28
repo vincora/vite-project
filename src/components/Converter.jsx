@@ -2,10 +2,11 @@ import { useState } from 'react';
 import { Controller } from 'react-hook-form';
 import { RotatingLines } from 'react-loader-spinner';
 
+import { useConverterForm } from '@/hooks/useConverterForm';
 import { calculateConverterInput } from '@/lib/calculateConverterInput';
 import { formatNumber } from '@/lib/formatNumber';
-import { parseConverterInput } from '@/lib/parseConverterInput';
-import { useConverterForm } from '@/hooks/useConverterForm';
+import { normalizeConverterInput } from '@/lib/normalizeConverterInput';
+
 import { useCustomQuery } from '../hooks/useCustomQuery';
 import { cn } from '../lib/utils';
 import { Button } from './ui/button';
@@ -24,7 +25,7 @@ const Converter = () => {
     } = useConverterForm(currenciesQuery.data);
 
     const onSubmit = ({ input }) => {
-        const parsedInput = parseConverterInput(input);
+        const parsedInput = normalizeConverterInput(input);
         setNormalizedInput(parsedInput);
 
         const [amount, fromCurrency, , toCurrency] = parsedInput.split(' ');
