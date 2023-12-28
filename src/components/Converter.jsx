@@ -37,7 +37,7 @@ const Converter = () => {
         setConversionResult(`${formatNumber(convertedAmount)} ${toCurrency}`);
     };
 
-    if (ratesQuery.isLoading) {
+    if (ratesQuery.isLoading || currenciesQuery.isLoading) {
         return (
             <div className='flex justify-center'>
                 <RotatingLines
@@ -50,7 +50,7 @@ const Converter = () => {
             </div>
         );
     }
-    if (ratesQuery.isError) {
+    if (ratesQuery.isError || currenciesQuery.isError) {
         return (
             <div className='flex flex-col items-center gap-4'>
                 <h3>Error: {ratesQuery.error.message}</h3>
@@ -63,7 +63,7 @@ const Converter = () => {
             </div>
         );
     }
-    if (!ratesQuery.data) {
+    if (!ratesQuery.data || !currenciesQuery.data) {
         return <h3>No data</h3>;
     }
 
