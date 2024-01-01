@@ -1,18 +1,16 @@
-import { useEffect, useMemo } from "react";
-import { useForm } from "react-hook-form";
-import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useEffect, useMemo } from 'react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 
-
-export const useConverterForm = (currencies) => {
+export const useConverterForm = (currencyCodes) => {
     const schema = useMemo(() => {
-        if (!currencies) {
+        if (!Array.isArray(currencyCodes) || !currencyCodes.length) {
             return z.object({
                 input: z.string(),
             });
         }
 
-        const currencyCodes = Object.keys(currencies);
         const regexStr = currencyCodes.join('|');
         const regex = new RegExp('^\\s*\\d+\\s+(' + regexStr + ')\\s+in\\s+(' + regexStr + ')\\s*$', 'i');
 
@@ -21,7 +19,7 @@ export const useConverterForm = (currencies) => {
                 message: 'Invalid input',
             }),
         });
-    }, [currencies]);
+    }, [currencyCodes]);
 
     const form = useForm({
         resolver: zodResolver(schema),
@@ -34,7 +32,7 @@ export const useConverterForm = (currencies) => {
         if (form.isSubmitSuccessful) {
             form.reset();
         }
-    }, [form.isSubmitSuccessful, form.reset]);
+    }, [form.isSubmitSuccessful]);
 
     return form;
 };

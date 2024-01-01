@@ -1,41 +1,41 @@
-import { useState } from 'react';
-import { Controller } from 'react-hook-form';
+import { useEffect, useState } from 'react';
 import { RotatingLines } from 'react-loader-spinner';
 
-import { useConverterForm } from '@/hooks/useConverterForm';
 import { calculateConverterInput } from '@/lib/calculateConverterInput';
 import { formatNumber } from '@/lib/formatNumber';
-import { normalizeConverterInput } from '@/lib/normalizeConverterInput';
 
 import { useCustomQuery } from '../hooks/useCustomQuery';
-import { cn } from '../lib/utils';
+import Form from './Form';
 import { Button } from './ui/button';
-import { Input } from './ui/input';
-import { Label } from './ui/label';
 
 const Converter = () => {
-    const [normalizedInput, setNormalizedInput] = useState('');
-    const [conversionResult, setConversionResult] = useState();
     const { currenciesQuery, ratesQuery } = useCustomQuery();
+    const [request, setRequest] = useState({
+        amount: 0,
+        fromCurrency: '',
+        toCurrency: '',
+    });
+    const [conversionResult, setConversionResult] = useState('');
 
-    const {
-        handleSubmit,
-        control,
-        formState: { errors },
-    } = useConverterForm(currenciesQuery.data);
+    const handleFormSubmit = (data) => {
+        setRequest(data);
+    };
 
-    const onSubmit = ({ input }) => {
-        const parsedInput = normalizeConverterInput(input);
-        setNormalizedInput(parsedInput);
+    useEffect(() => {
+        if (!ratesQuery.data) return;
 
-        const [amount, fromCurrency, , toCurrency] = parsedInput.split(' ');
+        const { amount, fromCurrency, toCurrency } = request;
+
         const fromRate = ratesQuery.data[fromCurrency.toUpperCase()];
         const toRate = ratesQuery.data[toCurrency.toUpperCase()];
 
-        const convertedAmount = calculateConverterInput(fromRate, toRate, amount);
+        if (!fromRate || !toRate) return;
 
-        setConversionResult(`${formatNumber(convertedAmount)} ${toCurrency}`);
-    };
+        const result = formatNumber(calculateConverterInput(amount, fromRate, toRate));
+        setConversionResult(`${amount} ${fromCurrency} in ${toCurrency} = ${result} ${toCurrency}`);
+    }, [request, ratesQuery.data]);
+
+    const currencyCodes = Object.keys(currenciesQuery.data ?? []);
 
     if (ratesQuery.isLoading || currenciesQuery.isLoading) {
         return (
@@ -68,35 +68,13 @@ const Converter = () => {
     }
 
     return (
-        <form
-            name='form'
-            onSubmit={handleSubmit(onSubmit)}
-        >
-            <Label htmlFor='converterInput'>What do you want to convert?</Label>
-            <Controller
-                name='input'
-                control={control}
-                render={({ field, fieldState }) => (
-                    <div>
-                        <Input
-                            id='converterInput'
-                            placeholder='Example: 15 usd in rub'
-                            onChange={(e) => field.onChange(e.target.value)}
-                            value={field.value}
-                            className={cn('mt-2', { 'border-red-600': errors?.input })}
-                        />
-                        {fieldState.error && <p className='text-red-600 text-sm mt-1'>{fieldState.error.message}</p>}
-                    </div>
-                )}
+        <>
+            <Form
+                currencyCodes={currencyCodes}
+                onSubmit={handleFormSubmit}
             />
-            <Button
-                type='submit'
-                className='bg-sky-800 mt-4'
-            >
-                Calculate
-            </Button>
-            {conversionResult && <div className='mt-4'>{`${normalizedInput} = ${conversionResult}`}</div>}
-        </form>
+            {conversionResult && <div className='mt-4'>{conversionResult}</div>}
+        </>
     );
 };
 
