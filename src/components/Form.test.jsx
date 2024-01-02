@@ -1,8 +1,7 @@
-import { render, renderHook, screen, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, test, expect, vi } from 'vitest';
 
-import { useCustomQuery } from '@/hooks/useCustomQuery';
 import { customQueryWrapper } from '@/lib/customQueryWrapper';
 import { mockCurrencies } from '@/mocks/mockCurrencies';
 
@@ -28,7 +27,7 @@ describe('Form', () => {
 describe('Converter form validation', () => {
     test('submits', async () => {
         const mockSubmit = vi.fn(() => 0);
-        const currencies = mockCurrencies;
+        const currencies = Object.keys(mockCurrencies);
         const user = userEvent.setup();
         render(<Form currencyCodes={currencies} onSubmit={mockSubmit} />, { wrapper: customQueryWrapper() });
 
@@ -49,13 +48,19 @@ describe('Converter form validation', () => {
         expect(mockSubmit).not.toBeCalled();
         expect(await screen.findByText('Invalid input')).toBeInTheDocument();
     });
-});
-// describe('Loading and error states', () => {
-//     test('renders error state', async () => {
-//         render(<Converter />, { wrapper: customQueryWrapper() });
-//         const { result } = renderHook(() => useCustomQuery(), { wrapper: customQueryWrapper() });
+    test('resets input field after submission', async () => {
+        const mockSubmit = vi.fn(() => 0);
+        const currencies = Object.keys(mockCurrencies);
+        const user = userEvent.setup();
+        render(<Form currencyCodes={currencies} onSubmit={mockSubmit} />, { wrapper: customQueryWrapper() });
 
-//         await waitFor(() => expect(result.current.currenciesQuery.isSuccess).toBe(true));
-//         await waitFor(() => expect(result.current.ratesQuery.isSuccess).toBe(true));
-//     });
-// });
+        const inputElement = await screen.findByPlaceholderText('Example: 15 usd in rub')
+
+        await user.type(inputElement, '15 usd in rub');
+        await user.click(await screen.findByRole('button', { name: 'Calculate' }));
+
+        expect(mockSubmit).toBeCalledTimes(1);
+        expect(inputElement.value).toBe('')
+    })
+});
+
