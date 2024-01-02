@@ -29,10 +29,10 @@ export const useConverterForm = (currencyCodes) => {
     });
 
     useEffect(() => {
-        if (form.isSubmitSuccessful) {
+        if (form.formState.isSubmitSuccessful) {
             form.reset();
         }
-    }, [form.isSubmitSuccessful]);
+    }, [form.formState.isSubmitSuccessful]);
 
     return form;
 };

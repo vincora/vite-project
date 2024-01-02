@@ -8,6 +8,6 @@ export const fetchRates = async () => {
 
         return data.rates;
     } catch (error) {
-        throw error;
+        throw new Error(error.message);
     }
 };
