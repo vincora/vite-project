@@ -1,4 +1,5 @@
 import { http, HttpResponse } from 'msw';
+
 import { mockCurrencies } from './mockCurrencies';
 import { mockRates } from './mockRates';
 

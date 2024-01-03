@@ -8,13 +8,16 @@ import { CustomSelect } from './CustomSelect';
 import { Button } from './ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
 
-const ExchangeRates = ({}) => {
+const ExchangeRates = () => {
     const [baseCurrency, setBaseCurrency] = useState('USD');
     const { currenciesQuery, ratesQuery } = useCustomQuery();
 
-    if (ratesQuery.isLoading) {
+    if (ratesQuery.isLoading || currenciesQuery.isLoading) {
         return (
-            <div className='flex justify-center' data-testid='rates-loading-indicator'>
+            <div
+                className='flex justify-center'
+                data-testid='rates-loading-indicator'
+            >
                 <RotatingLines
                     strokeColor='grey'
                     strokeWidth='5'
@@ -26,10 +29,13 @@ const ExchangeRates = ({}) => {
         );
     }
 
-    if (ratesQuery.isError) {
+    if (ratesQuery.isError || currenciesQuery.isError) {
         return (
-            <div className='flex flex-col items-center gap-4' data-testid='error-block' >
-                <h3>Error: {ratesQuery.error.message}</h3>
+            <div
+                className='flex flex-col items-center gap-4'
+                data-testid='error-block'
+            >
+                <h3 data-testid='error-message'>Error: {ratesQuery.error.message}</h3>
                 <Button
                     className='bg-sky-800'
                     onClick={ratesQuery.refetch}
@@ -39,7 +45,7 @@ const ExchangeRates = ({}) => {
             </div>
         );
     }
-    if (!ratesQuery.data) {
+    if (!ratesQuery.data || !currenciesQuery.data) {
         return <h3>No data</h3>;
     }
 
@@ -73,10 +79,16 @@ const ExchangeRates = ({}) => {
                 </TableHeader>
                 <TableBody>
                     {Object.keys(ratesQuery?.data).map((key) => (
-                        <TableRow key={key} data-testid='exchange-rate-table-row'>
+                        <TableRow
+                            key={key}
+                            data-testid='exchange-rate-table-row'
+                        >
                             <TableCell>{key}</TableCell>
                             <TableCell>{currenciesQuery?.data && currenciesQuery?.data[key]}</TableCell>
-                            <TableCell className='text-right' data-testid='exchange-rate-number'>
+                            <TableCell
+                                className='text-right'
+                                data-testid='exchange-rate-number'
+                            >
                                 {formatNumber(ratesQuery?.data[key] / ratesQuery?.data[baseCurrency])}
                             </TableCell>
                         </TableRow>
