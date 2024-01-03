@@ -36,23 +36,7 @@ const viMockTransaction = async (pathToModule, mockModuleFactory, testFunc) => {
 };
 
 describe('Exchange rates page statuses', () => {
-    test('shows no data status', async () => {
-        await viMockTransaction(
-            '../hooks/useCustomQuery.js',
-            () => ({
-                useCustomQuery: () => ({
-                    currenciesQuery: { data: null },
-                    ratesQuery: {  data: null },
-                }),
-            }),
-            async () => {
-                const ExchangeRates = (await import('./ExchangeRates')).default;
-                render(<ExchangeRates />, { wrapper: customQueryWrapper() });
-                expect(screen.getByText(/no data/i)).toBeInTheDocument();
-            },
-        );
-    });
-    test('shows rotating lines component when loading', async () => {
+    test('Loading', async () => {
         await viMockTransaction(
             '../hooks/useCustomQuery.js',
             () => ({
@@ -70,31 +54,30 @@ describe('Exchange rates page statuses', () => {
             },
         );
     });
-    describe('Error state', () => {
+    describe('Error', () => {
         const errorMessage = 'loading error';
-        const mockRefect = vi.fn(() => 0);
+        const mockRefetch = vi.fn(() => 0);
 
         const mockErrorFactory = () => ({
             useCustomQuery: () => ({
                 currenciesQuery: { isError: true, isLoading: false },
-                ratesQuery: { isError: true, isLoading: false, error: { message: errorMessage }, refetch: mockRefect },
+                ratesQuery: { isError: true, isLoading: false, error: { message: errorMessage }, refetch: mockRefetch },
             }),
         });
 
         beforeEach(() => vi.resetAllMocks());
 
-        test('shows error block when error in query', async () => {
+        test('renders error block correctly', async () => {
             await viMockTransaction('../hooks/useCustomQuery', mockErrorFactory, async () => {
                 const ExchangeRates = (await import('./ExchangeRates')).default;
                 render(<ExchangeRates />, { wrapper: customQueryWrapper() });
 
                 expect(screen.getByTestId('error-block')).toBeInTheDocument();
-                expect(screen.getByTestId('error-message')).toBeInTheDocument();
                 expect(screen.getByTestId('error-message')).toContainHTML(errorMessage);
                 expect(screen.getByRole('button', { name: 'Refetch data' })).toBeInTheDocument();
             });
         });
-        test('calls function when refetch data button is clicked', async () => {
+        test('calls refetch function when button is clicked', async () => {
             await viMockTransaction('../hooks/useCustomQuery', mockErrorFactory, async () => {
                 const ExchangeRates = (await import('./ExchangeRates')).default;
                 render(<ExchangeRates />, { wrapper: customQueryWrapper() });
@@ -104,8 +87,24 @@ describe('Exchange rates page statuses', () => {
 
                 const user = userEvent.setup();
                 await user.click(refetchButton);
-                expect(mockRefect).toBeCalledTimes(1);
+                expect(mockRefetch).toBeCalledTimes(1);
             });
         });
+    });
+    test('No data', async () => {
+        await viMockTransaction(
+            '../hooks/useCustomQuery.js',
+            () => ({
+                useCustomQuery: () => ({
+                    currenciesQuery: { data: null },
+                    ratesQuery: { data: null },
+                }),
+            }),
+            async () => {
+                const ExchangeRates = (await import('./ExchangeRates')).default;
+                render(<ExchangeRates />, { wrapper: customQueryWrapper() });
+                expect(screen.getByText(/no data/i)).toBeInTheDocument();
+            },
+        );
     });
 });
