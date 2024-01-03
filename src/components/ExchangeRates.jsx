@@ -4,8 +4,8 @@ import { RotatingLines } from 'react-loader-spinner';
 import { formatNumber } from '@/lib/formatNumber';
 
 import { useCustomQuery } from '../hooks/useCustomQuery';
+import { CustomSelect } from './CustomSelect';
 import { Button } from './ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
 
 const ExchangeRates = ({}) => {
@@ -14,7 +14,7 @@ const ExchangeRates = ({}) => {
 
     if (ratesQuery.isLoading) {
         return (
-            <div className='flex justify-center'>
+            <div className='flex justify-center' data-testid='rates-loading-indicator'>
                 <RotatingLines
                     strokeColor='grey'
                     strokeWidth='5'
@@ -28,7 +28,7 @@ const ExchangeRates = ({}) => {
 
     if (ratesQuery.isError) {
         return (
-            <div className='flex flex-col items-center gap-4'>
+            <div className='flex flex-col items-center gap-4' data-testid='error-block' >
                 <h3>Error: {ratesQuery.error.message}</h3>
                 <Button
                     className='bg-sky-800'
@@ -47,40 +47,36 @@ const ExchangeRates = ({}) => {
         <div>
             <div className='space-y-2'>
                 <h2 className='text-sm font-medium'>Choose base currency</h2>
-                <Select
+                <CustomSelect
                     value={baseCurrency}
-                    onValueChange={(value) => setBaseCurrency(value)}
-                >
-                    <SelectTrigger className='w-full'>
-                        <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                        {currenciesQuery.data &&
-                            Object.keys(currenciesQuery?.data).map((key) => (
-                                <SelectItem
-                                    key={key}
-                                    value={key}
-                                >
-                                    {currenciesQuery?.data[key]}
-                                </SelectItem>
-                            ))}
-                    </SelectContent>
-                </Select>
+                    onChange={setBaseCurrency}
+                    options={currenciesQuery?.data}
+                />
             </div>
             <Table className='mt-4'>
                 <TableHeader>
                     <TableRow>
-                        <TableHead className='w-0'>Code</TableHead>
-                        <TableHead>Currency</TableHead>
-                        <TableHead className='text-right'>Quote</TableHead>
+                        <TableHead
+                            className='w-0'
+                            data-testid='exchange-rate-table-head'
+                        >
+                            Code
+                        </TableHead>
+                        <TableHead data-testid='exchange-rate-table-head'>Currency</TableHead>
+                        <TableHead
+                            className='text-right'
+                            data-testid='exchange-rate-table-head'
+                        >
+                            Quote
+                        </TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
                     {Object.keys(ratesQuery?.data).map((key) => (
-                        <TableRow key={key}>
+                        <TableRow key={key} data-testid='exchange-rate-table-row'>
                             <TableCell>{key}</TableCell>
                             <TableCell>{currenciesQuery?.data && currenciesQuery?.data[key]}</TableCell>
-                            <TableCell className='text-right'>
+                            <TableCell className='text-right' data-testid='exchange-rate-number'>
                                 {formatNumber(ratesQuery?.data[key] / ratesQuery?.data[baseCurrency])}
                             </TableCell>
                         </TableRow>
