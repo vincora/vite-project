@@ -52,8 +52,8 @@ const Converter = () => {
     }
     if (ratesQuery.isError || currenciesQuery.isError) {
         return (
-            <div className='flex flex-col items-center gap-4'>
-                <h3>Error: {ratesQuery.error.message}</h3>
+            <div className='flex flex-col items-center gap-4' data-testid='converter-error-block'>
+                <h3 data-testid='converter-error-message'>Error: {ratesQuery.error.message}</h3>
                 <Button
                     className='bg-sky-800'
                     onClick={() => ratesQuery.refetch()}
