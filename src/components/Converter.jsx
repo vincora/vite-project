@@ -68,13 +68,13 @@ const Converter = () => {
     }
 
     return (
-        <>
+        <div data-testid='converter-form' >
             <Form
                 currencyCodes={currencyCodes}
                 onSubmit={handleFormSubmit}
             />
-            {conversionResult && <div className='mt-4'>{conversionResult}</div>}
-        </>
+            {conversionResult && <div className='mt-4' data-testid='converter-result'>{conversionResult}</div>}
+        </ div>
     );
 };
 

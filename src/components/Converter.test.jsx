@@ -4,6 +4,29 @@ import { describe, test, expect } from 'vitest';
 
 import { customQueryWrapper } from '@/lib/customQueryWrapper';
 
+import Converter from './Converter';
+
+describe('Converter', () => {
+    test('renders form', async () => {
+        render(<Converter />, { wrapper: customQueryWrapper() });
+        expect(await screen.findByTestId('converter-form')).toBeInTheDocument();
+    });
+    test('renders result', async () => {
+        render(<Converter />, { wrapper: customQueryWrapper() });
+
+        const input = await screen.findByPlaceholderText('Example: 15 usd in rub');
+        const button = await screen.findByRole('button', { name: 'Calculate' });
+        const user = userEvent.setup();
+
+        expect(input).toBeInTheDocument();
+        expect(button).toBeInTheDocument();
+        await user.type(input, '15 usd in rub');
+        await user.click(button);
+
+        expect(await screen.findByTestId('converter-result')).toBeInTheDocument();
+    });
+});
+
 const viMockTransaction = async (pathToModule, mockModuleFactory, testFunc) => {
     vi.doMock(pathToModule, mockModuleFactory);
     vi.resetModules();
