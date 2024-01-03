@@ -39,7 +39,7 @@ const Converter = () => {
 
     if (ratesQuery.isLoading || currenciesQuery.isLoading) {
         return (
-            <div className='flex justify-center'>
+            <div className='flex justify-center' data-testid='converter-loading-indicator'>
                 <RotatingLines
                     strokeColor='grey'
                     strokeWidth='5'
