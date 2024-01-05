@@ -1,6 +1,6 @@
 import { Outlet, Link } from 'react-router-dom';
 
-function App() {
+function Layout() {
     return (
         <div className='container w-3/4 p-4'>
             <nav className='mb-6'>
@@ -18,4 +18,4 @@ function App() {
     );
 }
 
-export default App;
+export default Layout;

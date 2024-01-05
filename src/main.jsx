@@ -3,7 +3,8 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
-import App from './App.jsx';
+import Layout from './Layout.jsx';
+import ErrorPage from './ErrorPage.jsx';
 import Converter from './components/Converter';
 import ExchangeRates from './components/ExchangeRates';
 import './index.css';
@@ -11,7 +12,8 @@ import './index.css';
 const router = createBrowserRouter([
     {
         path: '/',
-        element: <App />,
+        element: <Layout />,
+        errorElement: <ErrorPage />,
         children: [
             { index: true, element: <ExchangeRates /> },
             {
