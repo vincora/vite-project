@@ -7,7 +7,7 @@ export const handlers = [
     http.get('https://openexchangerates.org/api/latest.json', () => {
         return HttpResponse.json(mockRates);
     }),
-    http.get('https://openexchangerates.org/api/currencies.json', () => {
+    http.get('https://openexchangerates.org/api/currencies.json', () => {    
         return HttpResponse.json(mockCurrencies);
     }),
 ];
