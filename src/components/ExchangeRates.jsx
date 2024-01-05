@@ -50,7 +50,7 @@ const ExchangeRates = () => {
     }
 
     return (
-        <div>
+        <div data-testid='exchange-rates-page'>
             <div className='space-y-2'>
                 <h2 className='text-sm font-medium'>Choose base currency</h2>
                 <CustomSelect
