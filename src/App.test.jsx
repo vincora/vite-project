@@ -3,34 +3,12 @@ import { userEvent } from '@testing-library/user-event';
 import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 import { test, expect, describe } from 'vitest';
 
-import App from './App';
-import ErrorPage from './ErrorPage';
-import Converter from './components/Converter';
-import ExchangeRates from './components/ExchangeRates';
 import { customQueryWrapper } from './lib/customQueryWrapper';
-
-const routes = [
-    {
-        path: '/',
-        element: <App />,
-        errorElement: <ErrorPage />,
-        children: [
-            { index: true, element: <ExchangeRates /> },
-            {
-                path: '/list',
-                element: <ExchangeRates />,
-            },
-            {
-                path: '/converter',
-                element: <Converter />,
-            },
-        ],
-    },
-];
+import { routerConfig } from './routerConfig';
 
 describe('Layout', () => {
     test('renders header elements', () => {
-        const router = createMemoryRouter(routes);
+        const router = createMemoryRouter(routerConfig);
 
         render(<RouterProvider router={router} />, { wrapper: customQueryWrapper() });
 
@@ -41,7 +19,7 @@ describe('Layout', () => {
 
 describe('Router', () => {
     test('basic navigation works correctly', async () => {
-        const router = createMemoryRouter(routes);
+        const router = createMemoryRouter(routerConfig);
         render(<RouterProvider router={router} />, { wrapper: customQueryWrapper() });
 
         const user = userEvent.setup();
@@ -53,9 +31,9 @@ describe('Router', () => {
         expect(await screen.findByTestId('exchange-rates-page')).toBeInTheDocument();
     });
     test('shows error page if the path is incorrect', () => {
-        const router = createMemoryRouter(routes, { initialEntries: ['/some-incorrect-path'] });
+        const router = createMemoryRouter(routerConfig, { initialEntries: ['/some-incorrect-path'] });
         render(<RouterProvider router={router} />, { wrapper: customQueryWrapper() });
 
         expect(screen.getByTestId('error-page')).toBeInTheDocument();
     });
-})
+});

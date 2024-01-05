@@ -3,30 +3,10 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
-import App from './App.jsx';
-import ErrorPage from './ErrorPage.jsx';
-import Converter from './components/Converter';
-import ExchangeRates from './components/ExchangeRates';
 import './index.css';
+import { routerConfig } from './routerConfig.jsx';
 
-const router = createBrowserRouter([
-    {
-        path: '/',
-        element: <App />,
-        errorElement: <ErrorPage />,
-        children: [
-            { index: true, element: <ExchangeRates /> },
-            {
-                path: '/list',
-                element: <ExchangeRates />,
-            },
-            {
-                path: '/converter',
-                element: <Converter />,
-            },
-        ],
-    },
-]);
+const router = createBrowserRouter(routerConfig);
 
 const queryClient = new QueryClient();
 
