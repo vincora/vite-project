@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
-import { fetchCurrencies } from './fetchCurrencies';
-import { fetchRates } from './fetchRates';
 
+import { fetchCurrencies } from '../fetchCurrencies';
+import { fetchRates } from '../fetchRates';
 
 export const useCustomQuery = () => {
     return {
@@ -12,9 +12,6 @@ export const useCustomQuery = () => {
         ratesQuery: useQuery({
             queryKey: ['ratesList'],
             queryFn: fetchRates,
-        })
-    }
-}
-
-
-
+        }),
+    };
+};

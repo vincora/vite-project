@@ -1,8 +1,7 @@
-import App from "@/App";
-import ErrorPage from "@/ErrorPage";
-import Converter from "@/components/Converter";
-import ExchangeRates from "@/components/ExchangeRates";
-
+import App from '@/App';
+import ErrorPage from '@/ErrorPage';
+import Converter from '@/components/converter/Converter';
+import ExchangeRates from '@/components/rates-list/ExchangeRates';
 
 export const routerConfig = [
     {

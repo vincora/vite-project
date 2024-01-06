@@ -1,12 +1,12 @@
 import { Controller } from 'react-hook-form';
 
-import { useConverterForm } from '@/hooks/useConverterForm';
-import { normalizeConverterInput } from '@/lib/normalizeConverterInput';
+import { useConverterForm } from '@/components/converter/form/useConverterForm';
+import { normalizeConverterInput } from '@/components/converter/utils/normalizeConverterInput.js';
 
-import { cn } from '../lib/utils';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
-import { Label } from './ui/label';
+import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 const Form = ({ currencyCodes, onSubmit }) => {
     const {

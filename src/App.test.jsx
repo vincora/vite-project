@@ -3,8 +3,8 @@ import { userEvent } from '@testing-library/user-event';
 import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 import { test, expect, describe } from 'vitest';
 
-import { customQueryWrapper } from './lib/customQueryWrapper';
 import { routerConfig } from './routerConfig';
+import { customQueryWrapper } from './tests/testQueryWrapper';
 
 describe('Layout', () => {
     test('renders header elements', () => {

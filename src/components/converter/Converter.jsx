@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { RotatingLines } from 'react-loader-spinner';
 
-import { calculateConverterInput } from '@/lib/calculateConverterInput';
+import { calculateConverterInput } from '@/components/converter/utils/calculateConverterInput';
 import { formatNumber } from '@/lib/formatNumber';
 
-import { useCustomQuery } from '../hooks/useCustomQuery';
-import Form from './Form';
-import { Button } from './ui/button';
+import { useCustomQuery } from '@/api/queries/useCustomQuery';
+import { Button } from '@/components/ui/button';
+import Form from './form/Form';
 
 const Converter = () => {
     const { currenciesQuery, ratesQuery } = useCustomQuery();
@@ -39,7 +39,10 @@ const Converter = () => {
 
     if (ratesQuery.isLoading || currenciesQuery.isLoading) {
         return (
-            <div className='flex justify-center' data-testid='converter-loading-indicator'>
+            <div
+                className='flex justify-center'
+                data-testid='converter-loading-indicator'
+            >
                 <RotatingLines
                     strokeColor='grey'
                     strokeWidth='5'
@@ -52,7 +55,10 @@ const Converter = () => {
     }
     if (ratesQuery.isError || currenciesQuery.isError) {
         return (
-            <div className='flex flex-col items-center gap-4' data-testid='converter-error-block'>
+            <div
+                className='flex flex-col items-center gap-4'
+                data-testid='converter-error-block'
+            >
                 <h3 data-testid='converter-error-message'>Error: {ratesQuery.error.message}</h3>
                 <Button
                     className='bg-sky-800'
@@ -68,13 +74,20 @@ const Converter = () => {
     }
 
     return (
-        <div data-testid='converter-form' >
+        <div data-testid='converter-form'>
             <Form
                 currencyCodes={currencyCodes}
                 onSubmit={handleFormSubmit}
             />
-            {conversionResult && <div className='mt-4' data-testid='converter-result'>{conversionResult}</div>}
-        </ div>
+            {conversionResult && (
+                <div
+                    className='mt-4'
+                    data-testid='converter-result'
+                >
+                    {conversionResult}
+                </div>
+            )}
+        </div>
     );
 };
 

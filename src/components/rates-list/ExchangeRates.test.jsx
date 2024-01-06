@@ -1,29 +1,29 @@
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
-import { describe, test, expect } from 'vitest';
+import { beforeEach } from 'node:test';
+import { describe, test, expect, vi } from 'vitest';
 
-import { customQueryWrapper } from '@/lib/customQueryWrapper';
+import { mockRates } from '@/mocks/mockRates';
+import { customQueryWrapper } from '@/tests/testQueryWrapper';
 
-import Converter from './Converter';
+import ExchangeRates from './ExchangeRates';
 
-describe('Converter', () => {
-    test('renders form', async () => {
-        render(<Converter />, { wrapper: customQueryWrapper() });
-        expect(await screen.findByTestId('converter-form')).toBeInTheDocument();
+const rates = Object.values(mockRates.rates);
+
+describe('Rates List', () => {
+    test('renders header correctly', async () => {
+        render(<ExchangeRates />, { wrapper: customQueryWrapper() });
+        expect(await screen.findByText(/Choose base currency/i)).toBeInTheDocument();
     });
-    test('renders result', async () => {
-        render(<Converter />, { wrapper: customQueryWrapper() });
-
-        const input = await screen.findByPlaceholderText('Example: 15 usd in rub');
-        const button = await screen.findByRole('button', { name: 'Calculate' });
-        const user = userEvent.setup();
-
-        expect(input).toBeInTheDocument();
-        expect(button).toBeInTheDocument();
-        await user.type(input, '15 usd in rub');
-        await user.click(button);
-
-        expect(await screen.findByTestId('converter-result')).toBeInTheDocument();
+    test('renders table titles', async () => {
+        render(<ExchangeRates />, { wrapper: customQueryWrapper() });
+        const tableHeaders = await screen.findAllByTestId('exchange-rate-table-head');
+        expect(tableHeaders).toHaveLength(3);
+    });
+    test('renders table data rows', async () => {
+        render(<ExchangeRates />, { wrapper: customQueryWrapper() });
+        const tableRows = await screen.findAllByTestId('exchange-rate-table-row');
+        expect(tableRows.length).toEqual(rates.length);
     });
 });
 
@@ -35,10 +35,10 @@ const viMockTransaction = async (pathToModule, mockModuleFactory, testFunc) => {
     vi.doUnmock(pathToModule);
 };
 
-describe('Converter page statuses', () => {
+describe('Exchange rates page statuses', () => {
     test('Loading', async () => {
         await viMockTransaction(
-            '../hooks/useCustomQuery',
+            '../hooks/useCustomQuery.js',
             () => ({
                 useCustomQuery: () => ({
                     currenciesQuery: { isLoading: true },
@@ -46,10 +46,11 @@ describe('Converter page statuses', () => {
                 }),
             }),
             async () => {
-                const Converter = (await import('./Converter')).default;
-                render(<Converter />, { wrapper: customQueryWrapper() });
+                const ExchangeRates = (await import('./ExchangeRates')).default;
+                render(<ExchangeRates />, { wrapper: customQueryWrapper() });
 
-                expect(screen.getByTestId('converter-loading-indicator')).toBeInTheDocument();
+                const loadingIndicator = screen.getByTestId('rates-loading-indicator');
+                expect(loadingIndicator).toBeInTheDocument();
             },
         );
     });
@@ -63,20 +64,23 @@ describe('Converter page statuses', () => {
                 ratesQuery: { isError: true, isLoading: false, error: { message: errorMessage }, refetch: mockRefetch },
             }),
         });
+
+        beforeEach(() => vi.resetAllMocks());
+
         test('renders error block correctly', async () => {
             await viMockTransaction('../hooks/useCustomQuery', mockErrorFactory, async () => {
-                const Converter = (await import('./Converter')).default;
-                render(<Converter />, { wrapper: customQueryWrapper() });
+                const ExchangeRates = (await import('./ExchangeRates')).default;
+                render(<ExchangeRates />, { wrapper: customQueryWrapper() });
 
-                expect(screen.getByTestId('converter-error-block')).toBeInTheDocument();
-                expect(screen.getByTestId('converter-error-message')).toContainHTML(errorMessage);
+                expect(screen.getByTestId('error-block')).toBeInTheDocument();
+                expect(screen.getByTestId('error-message')).toContainHTML(errorMessage);
                 expect(screen.getByRole('button', { name: 'Refetch data' })).toBeInTheDocument();
             });
         });
         test('calls refetch function when button is clicked', async () => {
             await viMockTransaction('../hooks/useCustomQuery', mockErrorFactory, async () => {
-                const Converter = (await import('./Converter')).default;
-                render(<Converter />, { wrapper: customQueryWrapper() });
+                const ExchangeRates = (await import('./ExchangeRates')).default;
+                render(<ExchangeRates />, { wrapper: customQueryWrapper() });
 
                 const refetchButton = screen.getByRole('button', { name: 'Refetch data' });
                 expect(refetchButton).toBeInTheDocument();
@@ -89,7 +93,7 @@ describe('Converter page statuses', () => {
     });
     test('No data', async () => {
         await viMockTransaction(
-            '../hooks/useCustomQuery',
+            '../hooks/useCustomQuery.js',
             () => ({
                 useCustomQuery: () => ({
                     currenciesQuery: { data: null },
@@ -97,9 +101,8 @@ describe('Converter page statuses', () => {
                 }),
             }),
             async () => {
-                const Converter = (await import('./Converter')).default;
-                render(<Converter />, { wrapper: customQueryWrapper() });
-
+                const ExchangeRates = (await import('./ExchangeRates')).default;
+                render(<ExchangeRates />, { wrapper: customQueryWrapper() });
                 expect(screen.getByText(/no data/i)).toBeInTheDocument();
             },
         );

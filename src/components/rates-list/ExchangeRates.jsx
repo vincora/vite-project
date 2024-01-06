@@ -3,10 +3,10 @@ import { RotatingLines } from 'react-loader-spinner';
 
 import { formatNumber } from '@/lib/formatNumber';
 
-import { useCustomQuery } from '../hooks/useCustomQuery';
-import { CustomSelect } from './CustomSelect';
-import { Button } from './ui/button';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
+import { useCustomQuery } from '@/api/queries/useCustomQuery';
+import { Button } from '@/components/ui/button';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { CustomSelect } from './select/CustomSelect';
 
 const ExchangeRates = () => {
     const [baseCurrency, setBaseCurrency] = useState('USD');
