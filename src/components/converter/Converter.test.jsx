@@ -38,11 +38,13 @@ const viMockTransaction = async (pathToModule, mockModuleFactory, testFunc) => {
 describe('Converter page statuses', () => {
     test('Loading', async () => {
         await viMockTransaction(
-            '@/api/queries/useCustomQuery',
+            '@/api/queries',
             () => ({
-                useCustomQuery: () => ({
-                    currenciesQuery: { isLoading: true },
-                    ratesQuery: { isLoading: true },
+                useApiCurrencies: () => ({
+                    isLoading: true,
+                }),
+                useApiRates: () => ({
+                    isLoading: true,
                 }),
             }),
             async () => {
@@ -58,13 +60,19 @@ describe('Converter page statuses', () => {
         const mockRefetch = vi.fn(() => 0);
 
         const mockErrorFactory = () => ({
-            useCustomQuery: () => ({
-                currenciesQuery: { isError: true, isLoading: false },
-                ratesQuery: { isError: true, isLoading: false, error: { message: errorMessage }, refetch: mockRefetch },
+            useApiCurrencies: () => ({
+                isError: true,
+                isLoading: false,
+            }),
+            useApiRates: () => ({
+                isError: true,
+                isLoading: false,
+                error: { message: errorMessage },
+                refetch: mockRefetch,
             }),
         });
         test('renders error block correctly', async () => {
-            await viMockTransaction('@/api/queries/useCustomQuery', mockErrorFactory, async () => {
+            await viMockTransaction('@/api/queries', mockErrorFactory, async () => {
                 const Converter = (await import('./Converter')).default;
                 render(<Converter />, { wrapper: customQueryWrapper() });
 
@@ -74,7 +82,7 @@ describe('Converter page statuses', () => {
             });
         });
         test('calls refetch function when button is clicked', async () => {
-            await viMockTransaction('@/api/queries/useCustomQuery', mockErrorFactory, async () => {
+            await viMockTransaction('@/api/queries', mockErrorFactory, async () => {
                 const Converter = (await import('./Converter')).default;
                 render(<Converter />, { wrapper: customQueryWrapper() });
 
@@ -89,11 +97,13 @@ describe('Converter page statuses', () => {
     });
     test('No data', async () => {
         await viMockTransaction(
-            '@/api/queries/useCustomQuery',
+            '@/api/queries',
             () => ({
-                useCustomQuery: () => ({
-                    currenciesQuery: { data: null },
-                    ratesQuery: { data: null },
+                useApiCurrencies: () => ({
+                    data: null,
+                }),
+                useApiRates: () => ({
+                    data: null,
                 }),
             }),
             async () => {

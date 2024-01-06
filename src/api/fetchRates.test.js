@@ -6,5 +6,5 @@ import { fetchRates } from './fetchRates';
 
 test('fetches mocked rates correctly', async () => {
     const data = await fetchRates();
-    expect(data).toEqual(mockRates.rates);
+    expect(data).toEqual(mockRates);
 });

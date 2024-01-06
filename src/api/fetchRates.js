@@ -5,5 +5,5 @@ export const fetchRates = async () => {
 
     const response = await fetch(apiUrl);
     const data = await response.json();
-    return data.rates;
+    return data;
 };

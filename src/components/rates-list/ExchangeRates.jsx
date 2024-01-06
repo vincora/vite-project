@@ -1,16 +1,16 @@
 import { useState } from 'react';
 import { RotatingLines } from 'react-loader-spinner';
 
-import { useCustomQuery } from '@/api/queries/useCustomQuery';
+import { useApiCurrencies, useApiRates } from '@/api/queries';
 import { Button } from '@/components/ui/button';
-
 
 import { CustomSelect } from './select/CustomSelect';
 import { CustomTable } from './table/CustomTable';
 
 const ExchangeRates = () => {
     const [baseCurrency, setBaseCurrency] = useState('USD');
-    const { currenciesQuery, ratesQuery } = useCustomQuery();
+    const currenciesQuery = useApiCurrencies();
+    const ratesQuery = useApiRates();
 
     if (ratesQuery.isLoading || currenciesQuery.isLoading) {
         return (
