@@ -100,6 +100,7 @@ describe('Exchange rates page statuses', () => {
         });
     });
     test('No data', async () => {
+        
         await viMockTransaction(
             '@/api/queries',
             () => ({
