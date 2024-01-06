@@ -38,7 +38,7 @@ const viMockTransaction = async (pathToModule, mockModuleFactory, testFunc) => {
 describe('Exchange rates page statuses', () => {
     test('Loading', async () => {
         await viMockTransaction(
-            '../hooks/useCustomQuery.js',
+            '@api/queries/useCustomQuery.js',
             () => ({
                 useCustomQuery: () => ({
                     currenciesQuery: { isLoading: true },
@@ -68,7 +68,7 @@ describe('Exchange rates page statuses', () => {
         beforeEach(() => vi.resetAllMocks());
 
         test('renders error block correctly', async () => {
-            await viMockTransaction('../hooks/useCustomQuery', mockErrorFactory, async () => {
+            await viMockTransaction('@/api/queries/useCustomQuery', mockErrorFactory, async () => {
                 const ExchangeRates = (await import('./ExchangeRates')).default;
                 render(<ExchangeRates />, { wrapper: customQueryWrapper() });
 
@@ -78,7 +78,7 @@ describe('Exchange rates page statuses', () => {
             });
         });
         test('calls refetch function when button is clicked', async () => {
-            await viMockTransaction('../hooks/useCustomQuery', mockErrorFactory, async () => {
+            await viMockTransaction('@/api/queries/useCustomQuery', mockErrorFactory, async () => {
                 const ExchangeRates = (await import('./ExchangeRates')).default;
                 render(<ExchangeRates />, { wrapper: customQueryWrapper() });
 
@@ -93,7 +93,7 @@ describe('Exchange rates page statuses', () => {
     });
     test('No data', async () => {
         await viMockTransaction(
-            '../hooks/useCustomQuery.js',
+            '@/api/queries/useCustomQuery.js',
             () => ({
                 useCustomQuery: () => ({
                     currenciesQuery: { data: null },
