@@ -1,4 +1,4 @@
-const apiKey = import.meta.env.REACT_APP_OPEN_EXCHANGE_RATES_API_KEY;
+const apiKey = import.meta.env.VITE_OPEN_EXCHANGE_RATES_API_KEY;
 
 export const fetchRates = async () => {
     const apiUrl = `https://openexchangerates.org/api/latest.json?app_id=${encodeURIComponent(apiKey)}`;
