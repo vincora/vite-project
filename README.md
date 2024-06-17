@@ -12,7 +12,7 @@ This application provides a way to convert currencies and view current exchange 
 
 ---
 
-## Technologies
+## Technologies Used
 
 - [React](https://reactjs.org/)
 - [Tailwind CSS](https://tailwindcss.com/)
@@ -25,6 +25,6 @@ This application provides a way to convert currencies and view current exchange 
 
 ## Usage
 
-**Currency Converter**: Navigate to the "Converter" page, enter a query in the format "15 USD in RUB", and click "Convert".
+- **Currency Converter**: Navigate to the "Converter" page, enter a query in the format "15 USD in RUB", and click "Calculate".
 
-**Current Exchange Rates**: Visit the "Exchange Rates" page to view current rates based on your selected base currency, change base currency if needed.
+- **Current Exchange Rates**: Visit the "Exchange Rates" page to view current rates based on your selected base currency, change base currency if needed.
