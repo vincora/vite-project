@@ -4,7 +4,7 @@ import { RotatingLines } from 'react-loader-spinner';
 import { useApiCurrencies, useApiRates } from '@/api/queries';
 import { calculateConverterInput } from '@/components/converter/utils/calculateConverterInput';
 import { Button } from '@/components/ui/button';
-import { formatNumber } from '@/lib/formatNumber';
+import { formatNumber } from '@/utils/format';
 
 import Form from './form/Form';
 

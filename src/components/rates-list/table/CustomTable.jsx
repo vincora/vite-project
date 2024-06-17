@@ -1,9 +1,9 @@
 import React from 'react';
-import { formatNumber } from '@/lib/formatNumber';
+
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { formatNumber } from '@/utils/format';
 
-
-export const CustomTable = ({rates, currencies, baseCurrency}) => {
+export const CustomTable = ({ rates, currencies, baseCurrency }) => {
     return (
         <>
             <Table className='mt-4'>
@@ -45,4 +45,3 @@ export const CustomTable = ({rates, currencies, baseCurrency}) => {
         </>
     );
 };
-

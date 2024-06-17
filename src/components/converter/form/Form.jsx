@@ -2,11 +2,10 @@ import { Controller } from 'react-hook-form';
 
 import { useConverterForm } from '@/components/converter/form/useConverterForm';
 import { normalizeConverterInput } from '@/components/converter/utils/normalizeConverterInput.js';
-
-import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { cn } from '@/utils/tailwind';
 
 const Form = ({ currencyCodes, onSubmit }) => {
     const {
