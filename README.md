@@ -15,7 +15,7 @@ This is a test task for a job application. It provides a way to convert currenci
 ## Technologies Used
 
 - [React](https://reactjs.org/)
-- [Tailwind CSS](https://tailwindcss.com/)
+- [shadcn](https://ui.shadcn.com/)
 - [React Router 6](https://reactrouter.com/en/main)
 - [React Hook Form](https://react-hook-form.com/)
 - [Zod](https://zod.dev/)
